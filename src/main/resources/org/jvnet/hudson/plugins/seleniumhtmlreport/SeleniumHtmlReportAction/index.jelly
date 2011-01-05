@@ -43,7 +43,7 @@
                     <td align="center">${it.sumCommandPasses}</td>
                     <td align="center">${it.sumCommandFailures}</td>
                     <td align="center">${it.sumCommandErrors}</td>
-                    <td align="center">${it.totalTime} s = ${it.totalTime / 60} min</td>
+                    <td align="center">${it.totalTime} s = ${(it.totalTime - it.totalTime mod 60 ) / 60} min and ${it.totalTime mod 60} s</td>
                 </tr>
                 </tbody>
             </table>
