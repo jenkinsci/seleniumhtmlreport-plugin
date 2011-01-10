@@ -10,7 +10,7 @@
   <artifactId>seleniumhtmlreport</artifactId>
   <name>Selenium HTML report</name>
   <description>This is an hudson plugin to visualize the results of selenium tests</description>
-  <url>http://wiki.hudson-ci.org/</url>
+  <url>http://wiki.hudson-ci.org/display/HUDSON/seleniumhtmlreport+Plugin</url>
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
