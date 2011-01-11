@@ -26,4 +26,10 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
+  <scm>
+    <connection>scm:git:git://github.com/hudson/seleniumhtmlreport.git</connection>
+    <developerConnection>scm:git:git@github.com:hudson/seleniumhtmlreport.git</developerConnection>
+    <url>http://github.com/hudson/seleniumhtmlreport</url>
+  </scm>
+
 </project>
