@@ -1,5 +1,6 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
+import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
@@ -114,7 +115,7 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
 
     public DirectoryBrowserSupport doDynamic(StaplerRequest req, StaplerResponse rsp) {
         if (this.build != null) {
-            return new DirectoryBrowserSupport(this, SeleniumHtmlReportPublisher.getSeleniumReportsDir(this.build),
+            return new DirectoryBrowserSupport(this, new FilePath(SeleniumHtmlReportPublisher.getSeleniumReportsDir(this.build)),
                     "seleniumhtmlreport", "clipboard.gif", false);
         }
         return null;

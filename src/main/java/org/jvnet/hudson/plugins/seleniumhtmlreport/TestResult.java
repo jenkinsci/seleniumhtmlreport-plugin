@@ -83,8 +83,7 @@ public class TestResult implements Serializable {
     }
 
     protected static File getReportFileFor(final AbstractBuild<?,?> build, final TestResult testResult) {
-        return new File(build.getRootDir(),
-                SeleniumHtmlReportPublisher.SELENIUM_REPORTS_TARGET + "/" + testResult.getResultFileName());
+        return new File(SeleniumHtmlReportPublisher.getSeleniumReportsDir(build) + "/" + testResult.getResultFileName());
     }
 
     private static class InfoParser {

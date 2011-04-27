@@ -19,16 +19,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
-import org.xml.sax.SAXException;
 
 /**
  * @author Marco Machmer
@@ -67,7 +63,15 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         listener.getLogger().println("Publishing Selenium report...");
         FilePath seleniumResults = build.getWorkspace().child(this.testResultsDir);
-        FilePath target = getSeleniumReportsDir(build);
+        if (!seleniumResults.exists()) {
+            listener.getLogger().println("Missing directory " + this.testResultsDir);
+            return false;
+        }
+        if (seleniumResults.list().isEmpty()) {
+            listener.getLogger().println("Missing selenium result files in directory " + this.testResultsDir);
+            return false;
+        }
+        FilePath target = new FilePath(getSeleniumReportsDir(build));
         copyReports(seleniumResults, target, listener);
         List<TestResult> results = createResults(build, listener);
         SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, results);
@@ -83,7 +87,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
 
     private List<TestResult> createResults(AbstractBuild<?,?> build, BuildListener listener) throws IOException {
         List<TestResult> results = new ArrayList<TestResult>();
-        FileSet fs = Util.createFileSet(new File(build.getRootDir(), SELENIUM_REPORTS_TARGET), "**/*");
+        FileSet fs = Util.createFileSet(getSeleniumReportsDir(build), "**/*");
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
         if (files.length == 0) {
@@ -116,8 +120,8 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
      * Gets the directory where the latest selenium reports are stored for the
      * given build.
      */
-    protected static FilePath getSeleniumReportsDir(AbstractBuild<?,?> build) {
-        return new FilePath(new File(build.getRootDir(), SELENIUM_REPORTS_TARGET));
+    protected static File getSeleniumReportsDir(AbstractBuild<?,?> build) {
+        return new File(build.getRootDir(), SELENIUM_REPORTS_TARGET);
     }
 
     @Extension
