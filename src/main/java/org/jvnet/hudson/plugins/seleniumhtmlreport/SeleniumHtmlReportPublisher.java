@@ -134,13 +134,22 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
             return "Publish Selenium Html Report";
         }
 
-        /**
-         * Performs on-the-fly validation on the file mask wildcard.
-         */
-        public FormValidation doCheck(@AncestorInPath AbstractProject project,
-                @QueryParameter String value) throws IOException {
-            return FilePath.validateFileMask(project.getSomeWorkspace(), value);
+        public FormValidation doCheckTestResultsDir(@QueryParameter String value) {
+            if (value == null || value.isEmpty()) {
+                return FormValidation.error("Missing tests results location relative to your workspace");
+            }
+            if(isAbsolute(value)) {
+                return FormValidation.error("Please give a results location relative to your workspace");
+            }
+            return FormValidation.ok();
         }
+
+        private static boolean isAbsolute(String rel) {
+            return rel.startsWith("/") || DRIVE_PATTERN.matcher(rel).matches();
+        }
+
+        private static final Pattern DRIVE_PATTERN = Pattern.compile("[A-Za-z]:[\\\\/].*"),
+            ABSOLUTE_PREFIX_PATTERN = Pattern.compile("^(\\\\\\\\|(?:[A-Za-z]:)?[\\\\/])[\\\\/]*");
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
