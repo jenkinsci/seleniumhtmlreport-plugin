@@ -3,14 +3,14 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.394</version><!-- which version of Hudson is this plugin built against? -->
+    <version>1.405</version><!-- which version of Hudson is this plugin built against? -->
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>seleniumhtmlreport</artifactId>
   <name>Selenium HTML report</name>
-  <description>This is an hudson plugin to visualize the results of selenium tests</description>
-  <url>http://wiki.hudson-ci.org/display/HUDSON/seleniumhtmlreport+Plugin</url>
+  <description>This is an jenkins plugin to visualize the results of selenium tests</description>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/seleniumhtmlreport+Plugin</url>
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
@@ -27,15 +27,15 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/hudson/seleniumhtmlreport.git</connection>
-    <developerConnection>scm:git:git@github.com:hudson/seleniumhtmlreport.git</developerConnection>
-    <url>http://github.com/hudson/seleniumhtmlreport</url>
+    <connection>scm:git:git://github.com/jenkinsci/seleniumhtmlreport.git</connection>
+	<developerConnection>scm:git:git@github.com/jenkinsci/seleniumhtmlreport.git</developerConnection>
+    <url>https://github.com/jenkinsci/seleniumhtmlreport</url>
   </scm>
 
   <distributionManagement>
     <repository>
-      <id>java.net-m2-repository</id>
-      <url>http://maven.hudson-labs.org:8081/content/repositories/releases/</url>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
     </repository>
   </distributionManagement>
 </project>
