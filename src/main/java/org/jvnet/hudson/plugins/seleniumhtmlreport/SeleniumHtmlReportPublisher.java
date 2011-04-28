@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -31,12 +31,10 @@ import org.kohsuke.stapler.QueryParameter;
  */
 public class SeleniumHtmlReportPublisher extends Recorder implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static final String SELENIUM_REPORTS_TARGET = "seleniumReports";
+    private static final long serialVersionUID = 28042011L;
+    
+    private String SELENIUM_REPORTS_TARGET = "seleniumReports";
 
-    /**
-     * {@link FileSet} "includes" string, like "foo/bar/*.html"
-     */
     private final String testResultsDir;
 
     /**
@@ -74,7 +72,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         FilePath target = new FilePath(getSeleniumReportsDir(build));
         copyReports(seleniumResults, target, listener);
         List<TestResult> results = createResults(build, listener);
-        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, results);
+        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, results, getSeleniumReportsDir(build));
         build.getActions().add(action);
         calculateResultState(build, results, listener);
         return true;
@@ -94,7 +92,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
             return results;
         }
         for (String selfile : files) {
-            results.add(TestResult.parse(build, listener, selfile));
+            results.add(TestResult.parse(build, listener, selfile, getSeleniumReportsDir(build)));
         }
         return results;
     }
@@ -120,7 +118,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
      * Gets the directory where the latest selenium reports are stored for the
      * given build.
      */
-    protected static File getSeleniumReportsDir(AbstractBuild<?,?> build) {
+    protected File getSeleniumReportsDir(AbstractBuild<?,?> build) {
         return new File(build.getRootDir(), SELENIUM_REPORTS_TARGET);
     }
 

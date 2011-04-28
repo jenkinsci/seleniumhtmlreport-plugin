@@ -5,6 +5,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
 import hudson.model.DirectoryBrowserSupport;
+import java.io.File;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,11 +19,13 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
 
     public final AbstractBuild<?, ?> build;
     private final List<TestResult> results;
+    private final File seleniumReportsDir;
 
-    public SeleniumHtmlReportAction(AbstractBuild<?, ?> build, BuildListener listener, List<TestResult> results) {
+    public SeleniumHtmlReportAction(AbstractBuild<?, ?> build, BuildListener listener, List<TestResult> results, File seleniumReportsDir) {
         super();
         this.build = build;
         this.results = results;
+        this.seleniumReportsDir = seleniumReportsDir;
     }
 
     public String getIconFileName() {
@@ -115,7 +118,7 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
 
     public DirectoryBrowserSupport doDynamic(StaplerRequest req, StaplerResponse rsp) {
         if (this.build != null) {
-            return new DirectoryBrowserSupport(this, new FilePath(SeleniumHtmlReportPublisher.getSeleniumReportsDir(this.build)),
+            return new DirectoryBrowserSupport(this, new FilePath(this.seleniumReportsDir),
                     "seleniumhtmlreport", "clipboard.gif", false);
         }
         return null;

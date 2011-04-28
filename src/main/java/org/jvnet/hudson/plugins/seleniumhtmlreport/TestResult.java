@@ -67,10 +67,10 @@ public class TestResult implements Serializable {
         return this.resultFileName;
     }
 
-    public static TestResult parse(AbstractBuild<?,?> build, BuildListener listener, String resultFileName) throws IOException {
+    public static TestResult parse(AbstractBuild<?,?> build, BuildListener listener, String resultFileName, File seleniumReportsDir) throws IOException {
         TestResult result = new TestResult(resultFileName);
         listener.getLogger().println("parsing resultFile " + result.getResultFileName());
-        File reportFile = getReportFileFor(build, result);
+        File reportFile = getReportFileFor(build, result, seleniumReportsDir);
         InfoParser parser = new InfoParser(reportFile);
         result.result = parser.getString("result:");
         result.totalTime = parser.getInt("totalTime:");
@@ -82,8 +82,8 @@ public class TestResult implements Serializable {
         return result;
     }
 
-    protected static File getReportFileFor(final AbstractBuild<?,?> build, final TestResult testResult) {
-        return new File(SeleniumHtmlReportPublisher.getSeleniumReportsDir(build) + "/" + testResult.getResultFileName());
+    protected static File getReportFileFor(final AbstractBuild<?,?> build, final TestResult testResult, final File seleniumReportsDir) {
+        return new File(seleniumReportsDir + "/" + testResult.getResultFileName());
     }
 
     private static class InfoParser {
