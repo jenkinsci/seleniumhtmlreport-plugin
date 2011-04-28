@@ -26,8 +26,8 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/seleniumhtmlreport.git</connection>
-	<developerConnection>scm:git:git@github.com/jenkinsci/seleniumhtmlreport.git</developerConnection>
+    <connection>scm:git:ssh://github.com/jenkinsci/seleniumhtmlreport.git</connection>
+	<developerConnection>scm:git:ssh://git@github.com/jenkinsci/seleniumhtmlreport.git</developerConnection>
     <url>https://github.com/jenkinsci/seleniumhtmlreport</url>
   </scm>
 
