@@ -121,10 +121,8 @@ public class TestResult implements Serializable {
             ReadInfoHandler riHandler = new ReadInfoHandler(infoName);
             try {
                 saxParser.parse(this.reportFile, riHandler);
-            } catch (SAXException e) {
-                if (!(e.getCause() instanceof BreakParsingException)) {
-                    throw e;
-                }
+            } catch (BreakParsingException e) {
+                // break parsing
             }
             return riHandler.getInfo();
         }
@@ -148,24 +146,24 @@ public class TestResult implements Serializable {
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if ("td".equals(qName)) {
-                if (readInfo) {
-                    info = tempVal;
-                    readInfo = false;
-                    throw new SAXException(new BreakParsingException());
+                if (this.readInfo) {
+                    this.info = this.tempVal;
+                    this.readInfo = false;
+                    throw new BreakParsingException();
                 }
-                if (tempVal.equals(infoName)) {
-                    readInfo = true;
+                if (this.tempVal.equals(this.infoName)) {
+                    this.readInfo = true;
                 }
             }
         }
 
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
-            this.tempVal = new String(ch, start, length);
+            this.tempVal = new String(ch, start, length).trim();
         }
     }
     
-    private static class BreakParsingException extends RuntimeException {
+    private static class BreakParsingException extends SAXException {
         public BreakParsingException() {
             super();
         }
