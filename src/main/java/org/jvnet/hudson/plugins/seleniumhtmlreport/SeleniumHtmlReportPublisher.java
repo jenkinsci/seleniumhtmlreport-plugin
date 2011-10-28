@@ -85,14 +85,18 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
 
     private List<TestResult> createResults(AbstractBuild<?,?> build, BuildListener listener) throws IOException {
         List<TestResult> results = new ArrayList<TestResult>();
-        FileSet fs = Util.createFileSet(getSeleniumReportsDir(build), "**/*");
+        FileSet fs = Util.createFileSet(getSeleniumReportsDir(build), "**/*.html");
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
         if (files.length == 0) {
             return results;
         }
         for (String selfile : files) {
-            results.add(TestResult.parse(build, listener, selfile, getSeleniumReportsDir(build)));
+            try{
+                results.add(TestResult.parse(build, listener, selfile, getSeleniumReportsDir(build)));
+            } catch (Exception e) {
+                listener.getLogger().println("Unable to parse " + selfile + ": " + e);
+            }
         }
         return results;
     }
