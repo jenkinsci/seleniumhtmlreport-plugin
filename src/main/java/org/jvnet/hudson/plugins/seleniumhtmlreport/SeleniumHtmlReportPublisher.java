@@ -37,19 +37,30 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
 
     private final String testResultsDir;
 
+    private boolean failureIfExceptionOnParsingResultFiles = true;
+
     /**
      * 
      * @param testResults
      * @stapler-constructor
      */
     @DataBoundConstructor
-    public SeleniumHtmlReportPublisher(final String testResultsDir) {
+    public SeleniumHtmlReportPublisher(final String testResultsDir, final boolean failureIfExceptionOnParsingResultFiles) {
         super();
         this.testResultsDir = testResultsDir;
+        this.failureIfExceptionOnParsingResultFiles = failureIfExceptionOnParsingResultFiles;
     }
 
     public String getTestResultsDir() {
         return testResultsDir;
+    }
+
+    public boolean getFailureIfExceptionOnParsingResultFiles() {
+        return this.failureIfExceptionOnParsingResultFiles;
+    }
+
+    public boolean isFailureIfExceptionOnParsingResultFiles() {
+        return this.failureIfExceptionOnParsingResultFiles;
     }
 
     @Override
@@ -71,10 +82,15 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         }
         FilePath target = new FilePath(getSeleniumReportsDir(build));
         copyReports(seleniumResults, target, listener);
-        List<TestResult> results = createResults(build, listener);
-        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, results, getSeleniumReportsDir(build));
+        ResultTuple resultTpl = createResults(build, listener);
+        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, resultTpl.results, getSeleniumReportsDir(build));
         build.getActions().add(action);
-        calculateResultState(build, results, listener);
+        if (resultTpl.exceptionWhileParsing && this.failureIfExceptionOnParsingResultFiles) {
+            listener.getLogger().println("Set result to FAILURE");
+            build.setResult(Result.FAILURE);
+        } else {
+            calculateResultState(build, resultTpl.results, listener);
+        }
         return true;
     }
 
@@ -83,22 +99,24 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         seleniumResults.copyRecursiveTo(target);
     }
 
-    private List<TestResult> createResults(AbstractBuild<?,?> build, BuildListener listener) throws IOException {
+    private ResultTuple createResults(AbstractBuild<?,?> build, BuildListener listener) throws IOException {
         List<TestResult> results = new ArrayList<TestResult>();
+        ResultTuple resultTpl = new ResultTuple(false, results);
         FileSet fs = Util.createFileSet(getSeleniumReportsDir(build), "**/*.html");
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] files = ds.getIncludedFiles();
         if (files.length == 0) {
-            return results;
+            return resultTpl;
         }
         for (String selfile : files) {
             try{
                 results.add(TestResult.parse(build, listener, selfile, getSeleniumReportsDir(build)));
             } catch (Exception e) {
                 listener.getLogger().println("Unable to parse " + selfile + ": " + e);
+                resultTpl.exceptionWhileParsing = true;
             }
         }
-        return results;
+        return resultTpl;
     }
 
     private void calculateResultState(AbstractBuild<?,?> build, List<TestResult> results, BuildListener listener) {
@@ -156,6 +174,17 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
+        }
+    }
+
+    private class ResultTuple {
+        boolean exceptionWhileParsing = false;
+        List<TestResult> results;
+
+        public ResultTuple(boolean exceptionWhileParsing, List<TestResult> results) {
+            super();
+            this.exceptionWhileParsing = exceptionWhileParsing;
+            this.results = results;
         }
     }
 }

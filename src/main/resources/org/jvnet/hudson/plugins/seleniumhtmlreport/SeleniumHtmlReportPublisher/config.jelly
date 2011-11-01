@@ -2,4 +2,7 @@
   <f:entry title="Selenium tests results location" field="testResultsDir">
     <f:textbox />
   </f:entry>
+  <f:entry title="Set build result state to failure if an exception occured while parsing result files" field="failureIfExceptionOnParsingResultFiles">
+      <f:checkbox />
+  </f:entry>
 </j:jelly>
