@@ -10,7 +10,7 @@
   <name>Selenium HTML report</name>
   <description>This is an jenkins plugin to visualize the results of selenium tests</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/seleniumhtmlreport+Plugin</url>
-  <version>0.94-SNAPSHOT</version>
+  <version>0.94</version>
   <packaging>hpi</packaging>
 
   <developers>
