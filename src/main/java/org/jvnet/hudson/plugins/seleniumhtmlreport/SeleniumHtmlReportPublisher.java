@@ -65,7 +65,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
 
     @Override
     public BuildStepMonitor getRequiredMonitorService() {
-        return BuildStepMonitor.BUILD;
+        return BuildStepMonitor.NONE;
     }
 
     @Override
