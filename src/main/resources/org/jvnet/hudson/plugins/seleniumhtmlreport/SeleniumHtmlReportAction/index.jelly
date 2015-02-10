@@ -3,47 +3,53 @@
         <st:include it="${it.owner}" page="sidepanel.jelly" />
         <l:main-panel>
             <h2>The Selenium test reports.</h2><br/>
-            <table cellpadding="5" border="0" cellspacing="0" width="100%" >
+            <table style="white-space:nowrap;text-align: center;border-spacing: 2px;margin: 4px;width: 100%;">
                 <thead>
+                <tr>
+                    <td colspan='2'></td>
+                    <td colspan='3' style='background-color: #f1f1f1;'>Tests</td>
+                    <td colspan='3' style='background-color: #f1f1f1;'>Test steps</td>
+                    <td></td>
+                </tr>
                 <tr>
                     <td>Result</td>
                     <td>Name</td>
-                    <td>Tests total</td>
-                    <td>Tests passes</td>
-                    <td>Tests failures</td>
-                    <td>Commands passes</td>
-                    <td>Commands failures</td>
-                    <td>Commands errors</td>
+                    <td style='background-color: #f1f1f1;'>Total</td>
+                    <td style='background-color: #f1f1f1;'>Successful</td>
+                    <td style='background-color: #f1f1f1;'>Failed</td>
+                    <td style='background-color: #f1f1f1;'>Successful</td>
+                    <td style='background-color: #f1f1f1;'>Failed</td>
+                    <td style='background-color: #f1f1f1;'>Errors</td>
                     <td>Duration</td>
                 </tr>
                 </thead>
                 <tbody>
                     <j:forEach items="${it.results}" var="r">
                 <tr>
-                    <td align="center">
+                    <td>
                         <j:if test='${r.result == "passed"}'><img src="/plugin/seleniumhtmlreport/icons/ok.gif" alt="o"/></j:if>
                         <j:if test='${r.result == "failed"}'><img src="/plugin/seleniumhtmlreport/icons/fail.gif" alt="x"/></j:if>
                     </td>
                     <td><a href='${r.resultFileName}' target="_blank">${r.resultFileName}</a></td>
-                    <td align="center">${r.numTestTotal}</td>
-                    <td align="center">${r.numTestPasses}</td>
-                    <td align="center">${r.numTestFailures}</td>
-                    <td align="center">${r.numCommandPasses}</td>
-                    <td align="center">${r.numCommandFailures}</td>
-                    <td align="center">${r.numCommandErrors}</td>
-                    <td align="center">${r.totalTime}</td>
+                    <td>${r.numTestTotal}</td>
+                    <td>${r.numTestPasses}</td>
+                    <td>${r.numTestFailures}</td>
+                    <td>${r.numCommandPasses}</td>
+                    <td>${r.numCommandFailures}</td>
+                    <td>${r.numCommandErrors}</td>
+                    <td>${r.totalTime}</td>
                 </tr>
                     </j:forEach>
                 <tr>
                     <td></td>
-                    <td>Summen</td>
-                    <td align="center">${it.sumTestTotal}</td>
-                    <td align="center">${it.sumTestPasses}</td>
-                    <td align="center">${it.sumTestFailures}</td>
-                    <td align="center">${it.sumCommandPasses}</td>
-                    <td align="center">${it.sumCommandFailures}</td>
-                    <td align="center">${it.sumCommandErrors}</td>
-                    <td align="center">${it.totalTime} s = ${(it.totalTime - it.totalTime mod 60 ) / 60} min and ${it.totalTime mod 60} s</td>
+                    <td>Total</td>
+                    <td>${it.sumTestTotal}</td>
+                    <td>${it.sumTestPasses}</td>
+                    <td>${it.sumTestFailures}</td>
+                    <td>${it.sumCommandPasses}</td>
+                    <td>${it.sumCommandFailures}</td>s
+                    <td>${it.sumCommandErrors}</td>
+                    <td>${it.totalTime} s = ${(it.totalTime - it.totalTime mod 60 ) / 60} min and ${it.totalTime mod 60} s</td>
                 </tr>
                 </tbody>
             </table>
