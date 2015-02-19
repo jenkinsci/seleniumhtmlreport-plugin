@@ -47,7 +47,7 @@
                     <td>${it.sumTestPasses}</td>
                     <td>${it.sumTestFailures}</td>
                     <td>${it.sumCommandPasses}</td>
-                    <td>${it.sumCommandFailures}</td>s
+                    <td>${it.sumCommandFailures}</td>
                     <td>${it.sumCommandErrors}</td>
                     <td>${it.totalTime} s = ${(it.totalTime - it.totalTime mod 60 ) / 60} min and ${it.totalTime mod 60} s</td>
                 </tr>
