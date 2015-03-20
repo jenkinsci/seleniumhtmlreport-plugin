@@ -7,7 +7,7 @@
                 <thead>
                 <tr>
                     <td colspan='2'></td>
-                    <td colspan='3' style='background-color: #f1f1f1;'>Tests</td>
+                    <td colspan='3' style='background-color: #f1f1f1;'>Test cases</td>
                     <td colspan='3' style='background-color: #f1f1f1;'>Test steps</td>
                     <td></td>
                 </tr>
@@ -43,6 +43,7 @@
                 <tr>
                     <td></td>
                     <td style="text-align: left;">Total</td>
+                    <td style="text-align: left;">Total ${it.results.size()} reports</td>
                     <td>${it.sumTestTotal}</td>
                     <td>${it.sumTestPasses}</td>
                     <td>${it.sumTestFailures}</td>
