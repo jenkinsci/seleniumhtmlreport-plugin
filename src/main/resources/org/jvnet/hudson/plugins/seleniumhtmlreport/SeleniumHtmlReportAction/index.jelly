@@ -42,7 +42,6 @@
                     </j:forEach>
                 <tr>
                     <td></td>
-                    <td style="text-align: left;">Total</td>
                     <td style="text-align: left;">Total ${it.results.size()} reports</td>
                     <td>${it.sumTestTotal}</td>
                     <td>${it.sumTestPasses}</td>
