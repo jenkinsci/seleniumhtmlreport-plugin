@@ -49,6 +49,7 @@
                     <td>${it.sumCommandPasses}</td>
                     <td>${it.sumCommandFailures}</td>
                     <td>${it.sumCommandErrors}</td>
+                    <td>${it.totalTime}s<br/>${(int)(it.totalTime - (it.totalTime mod 3600)) / 3600}h ${(int)((it.totalTime mod 3600) - (it.totalTime mod 60)) / 60}min and ${it.totalTime mod 60}s</td>
                     <td>${it.totalTime}s<br/>${(int)((it.totalTime - (it.totalTime mod 3600)) / 3600)}h ${(int)(((it.totalTime mod 3600) - (it.totalTime mod 60)) / 60)}min and ${it.totalTime mod 60}s</td>
                 </tr>
                 </tbody>
