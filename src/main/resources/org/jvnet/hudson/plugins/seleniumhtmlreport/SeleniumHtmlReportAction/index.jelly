@@ -3,7 +3,7 @@
         <st:include it="${it.owner}" page="sidepanel.jelly" />
         <l:main-panel>
             <h2>The Selenium test reports.</h2><br/>
-            <table style="white-space:nowrap;text-align: center;border-spacing: 2px;margin: 4px;width: 100%;">
+            <table class="stripped" style="white-space:nowrap;text-align: center;border-spacing: 2px;margin: 4px;width: 100%;">
                 <thead>
                 <tr>
                     <td colspan='2'></td>
@@ -30,7 +30,7 @@
                         <j:if test='${r.result == "passed"}'><img src="/plugin/seleniumhtmlreport/icons/ok.gif" alt="o"/></j:if>
                         <j:if test='${r.result == "failed"}'><img src="/plugin/seleniumhtmlreport/icons/fail.gif" alt="x"/></j:if>
                     </td>
-                    <td><a href='${r.resultFileName}' target="_blank">${r.resultFileName}</a></td>
+                    <td style="text-align: left;"><a href='${r.resultFileName}' target="_blank">${r.resultFileName}</a></td>
                     <td>${r.numTestTotal}</td>
                     <td>${r.numTestPasses}</td>
                     <td>${r.numTestFailures}</td>
@@ -42,7 +42,7 @@
                     </j:forEach>
                 <tr>
                     <td></td>
-                    <td>Total</td>
+                    <td style="text-align: left;">Total</td>
                     <td>${it.sumTestTotal}</td>
                     <td>${it.sumTestPasses}</td>
                     <td>${it.sumTestFailures}</td>
