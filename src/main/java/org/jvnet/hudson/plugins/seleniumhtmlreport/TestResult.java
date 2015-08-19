@@ -9,6 +9,9 @@ import java.io.Serializable;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
+
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -67,7 +70,7 @@ public class TestResult implements Serializable {
         return this.resultFileName;
     }
 
-    public static TestResult parse(AbstractBuild<?,?> build, BuildListener listener, String resultFileName, File seleniumReportsDir) throws IOException {
+    public static TestResult parse(Run<?,?> build, TaskListener listener, String resultFileName, File seleniumReportsDir) throws IOException {
         TestResult result = new TestResult(resultFileName);
         listener.getLogger().println("parsing resultFile " + result.getResultFileName());
         File reportFile = getReportFileFor(build, result, seleniumReportsDir);
@@ -82,7 +85,7 @@ public class TestResult implements Serializable {
         return result;
     }
 
-    protected static File getReportFileFor(final AbstractBuild<?,?> build, final TestResult testResult, final File seleniumReportsDir) {
+    protected static File getReportFileFor(final Run<?,?> build, final TestResult testResult, final File seleniumReportsDir) {
         return new File(seleniumReportsDir + "/" + testResult.getResultFileName());
     }
 

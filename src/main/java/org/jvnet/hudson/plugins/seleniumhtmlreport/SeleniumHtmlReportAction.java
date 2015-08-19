@@ -1,10 +1,8 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
 import hudson.FilePath;
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.DirectoryBrowserSupport;
+import hudson.model.*;
+
 import java.io.File;
 
 import java.io.Serializable;
@@ -17,11 +15,11 @@ import org.kohsuke.stapler.StaplerResponse;
  */
 public class SeleniumHtmlReportAction implements Action, Serializable {
 
-    public final AbstractBuild<?, ?> build;
+    public final Run<?, ?> build;
     private final List<TestResult> results;
     private final File seleniumReportsDir;
 
-    public SeleniumHtmlReportAction(AbstractBuild<?, ?> build, BuildListener listener, List<TestResult> results, File seleniumReportsDir) {
+    public SeleniumHtmlReportAction(Run<?, ?> build, TaskListener listener, List<TestResult> results, File seleniumReportsDir) {
         super();
         this.build = build;
         this.results = results;
@@ -40,7 +38,7 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
         return "seleniumhtmlreport";
     }
 
-    public AbstractBuild<?, ?>getOwner() {
+    public Run<?, ?>getOwner() {
         return this.build;
     }
 

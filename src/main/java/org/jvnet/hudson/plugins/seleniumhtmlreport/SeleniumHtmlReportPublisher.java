@@ -4,10 +4,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Result;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -21,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import jenkins.tasks.SimpleBuildStep;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -29,7 +27,7 @@ import org.kohsuke.stapler.QueryParameter;
 /**
  * @author Marco Machmer
  */
-public class SeleniumHtmlReportPublisher extends Recorder implements Serializable {
+public class SeleniumHtmlReportPublisher extends Recorder implements Serializable, SimpleBuildStep {
 
     private static final long serialVersionUID = 28042011L;
     
@@ -69,16 +67,16 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
     }
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
         listener.getLogger().println("Publishing Selenium report...");
-        FilePath seleniumResults = build.getWorkspace().child(this.testResultsDir);
+        FilePath seleniumResults = workspace.child(this.testResultsDir);
         if (!seleniumResults.exists()) {
             listener.getLogger().println("Missing directory " + this.testResultsDir);
-            return false;
+            return;
         }
         if (seleniumResults.list().isEmpty()) {
             listener.getLogger().println("Missing selenium result files in directory " + this.testResultsDir);
-            return false;
+            return;
         }
         FilePath target = new FilePath(getSeleniumReportsDir(build));
         copyReports(seleniumResults, target, listener);
@@ -91,15 +89,14 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         } else {
             calculateResultState(build, resultTpl.results, listener);
         }
-        return true;
     }
 
-    private void copyReports(FilePath seleniumResults, FilePath target, BuildListener listener) throws IOException, InterruptedException {
+    private void copyReports(FilePath seleniumResults, FilePath target, TaskListener listener) throws IOException, InterruptedException {
         listener.getLogger().println("Copying the reports.");
         seleniumResults.copyRecursiveTo(target);
     }
 
-    private ResultTuple createResults(AbstractBuild<?,?> build, BuildListener listener) throws IOException {
+    private ResultTuple createResults(Run<?,?> build, TaskListener listener) throws IOException {
         List<TestResult> results = new ArrayList<TestResult>();
         ResultTuple resultTpl = new ResultTuple(false, results);
         FileSet fs = Util.createFileSet(getSeleniumReportsDir(build), "**/*.html");
@@ -119,7 +116,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         return resultTpl;
     }
 
-    private void calculateResultState(AbstractBuild<?,?> build, List<TestResult> results, BuildListener listener) {
+    private void calculateResultState(Run<?,?> build, List<TestResult> results, TaskListener listener) {
         if (Result.ABORTED == build.getResult() || Result.FAILURE == build.getResult()) {
             return;
         }
@@ -140,7 +137,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
      * Gets the directory where the latest selenium reports are stored for the
      * given build.
      */
-    protected File getSeleniumReportsDir(AbstractBuild<?,?> build) {
+    protected File getSeleniumReportsDir(Run<?,?> build) {
         return new File(build.getRootDir(), SELENIUM_REPORTS_TARGET);
     }
 
