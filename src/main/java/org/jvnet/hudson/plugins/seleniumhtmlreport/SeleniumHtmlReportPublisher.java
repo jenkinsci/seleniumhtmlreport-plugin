@@ -1,9 +1,6 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.Util;
+import hudson.*;
 import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -38,8 +35,8 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
     private boolean failureIfExceptionOnParsingResultFiles = true;
 
     /**
-     * 
-     * @param testResults
+     *
+     * @param testResultsDir
      * @stapler-constructor
      */
     @DataBoundConstructor
@@ -71,18 +68,16 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         listener.getLogger().println("Publishing Selenium report...");
         FilePath seleniumResults = workspace.child(this.testResultsDir);
         if (!seleniumResults.exists()) {
-            listener.getLogger().println("Missing directory " + this.testResultsDir);
-            return;
+            throw new AbortException("Missing directory " + this.testResultsDir);
         }
         if (seleniumResults.list().isEmpty()) {
-            listener.getLogger().println("Missing selenium result files in directory " + this.testResultsDir);
-            return;
+            throw new AbortException("Missing selenium result files in directory " + this.testResultsDir);
         }
         FilePath target = new FilePath(getSeleniumReportsDir(build));
         copyReports(seleniumResults, target, listener);
         ResultTuple resultTpl = createResults(build, listener);
-        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(build, listener, resultTpl.results, getSeleniumReportsDir(build));
-        build.getActions().add(action);
+        SeleniumHtmlReportAction action = new SeleniumHtmlReportAction(resultTpl.results, getSeleniumReportsDir(build));
+        build.addAction(action);
         if (resultTpl.exceptionWhileParsing && this.failureIfExceptionOnParsingResultFiles) {
             listener.getLogger().println("Set result to FAILURE");
             build.setResult(Result.FAILURE);

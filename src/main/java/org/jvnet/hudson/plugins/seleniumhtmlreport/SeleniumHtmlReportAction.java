@@ -7,21 +7,22 @@ import java.io.File;
 
 import java.io.Serializable;
 import java.util.List;
+
+import jenkins.model.RunAction2;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * @author Marco Machmer
  */
-public class SeleniumHtmlReportAction implements Action, Serializable {
+public class SeleniumHtmlReportAction implements Action, Serializable, RunAction2 {
 
-    public final Run<?, ?> build;
+    private transient Run<?, ?> build;
     private final List<TestResult> results;
     private final File seleniumReportsDir;
 
-    public SeleniumHtmlReportAction(Run<?, ?> build, TaskListener listener, List<TestResult> results, File seleniumReportsDir) {
+    public SeleniumHtmlReportAction(List<TestResult> results, File seleniumReportsDir) {
         super();
-        this.build = build;
         this.results = results;
         this.seleniumReportsDir = seleniumReportsDir;
     }
@@ -54,8 +55,18 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
         });
     }
 
-    protected static interface TestResultValueProvider {
-        public int getValueOf(TestResult result);
+    @Override
+    public void onAttached(Run<?, ?> build) {
+        this.build = build;
+    }
+
+    @Override
+    public void onLoad(Run<?, ?> build) {
+        this.build = build;
+    }
+
+    protected interface TestResultValueProvider {
+        int getValueOf(TestResult result);
     }
 
     protected int calculateSumOf(TestResultValueProvider values) {
