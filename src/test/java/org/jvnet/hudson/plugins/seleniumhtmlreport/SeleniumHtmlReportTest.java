@@ -1,6 +1,6 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
-import hudson.model.Result;
+import hudson.FilePath;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
@@ -9,59 +9,120 @@ import org.jenkinsci.plugins.workflow.steps.CoreStep;
 import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runners.model.Statement;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.RestartableJenkinsRule;
 
-import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
 public class SeleniumHtmlReportTest {
 
     @Rule
-    public RestartableJenkinsRule story
-            = new RestartableJenkinsRule();
+    public JenkinsRule story = new JenkinsRule();
 
     @Test
     public void configRoundTrip() throws Exception {
-        story.addStep(new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                SeleniumHtmlReportPublisher reportPublisher = new SeleniumHtmlReportPublisher(".", false);
-                CoreStep step = new CoreStep(reportPublisher);
+        SeleniumHtmlReportPublisher reportPublisher = new SeleniumHtmlReportPublisher(".", false);
+        CoreStep step = new CoreStep(reportPublisher);
+        step = new StepConfigTester(story).configRoundTrip(step);
+        SimpleBuildStep delegate = step.delegate;
 
-                step = new StepConfigTester(story.j).configRoundTrip(step);
-                SimpleBuildStep delegate = step.delegate;
-
-                assertTrue(String.valueOf(delegate), delegate instanceof SeleniumHtmlReportPublisher);
-                SeleniumHtmlReportPublisher s = (SeleniumHtmlReportPublisher) delegate;
-                assertEquals(".", s.getTestResultsDir());
-                assertFalse(s.getFailureIfExceptionOnParsingResultFiles());
-            }
-        });
+        assertTrue(String.valueOf(delegate), delegate instanceof SeleniumHtmlReportPublisher);
+        SeleniumHtmlReportPublisher s = (SeleniumHtmlReportPublisher) delegate;
+        assertEquals(".", s.getTestResultsDir());
+        assertFalse(s.getFailureIfExceptionOnParsingResultFiles());
     }
 
     /**
      * Parse a selenium test result
      */
     @Test
-    public void parse() throws Exception {
-        assertNotNull("Test file missing", getClass().getResource("/SeleniumHtmlReportTest.html"));
+    public void testParserResultFromStep() throws Exception {
+        WorkflowJob p = story.jenkins.createProject(WorkflowJob.class, "p");
+        FilePath testResults = story.jenkins.getWorkspaceFor(p).child("result.html");
+        testResults.copyFrom(new ByteArrayInputStream(createSeleniumResultFile()));
 
-        story.addStep(new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                WorkflowJob p = story.j.jenkins.createProject(WorkflowJob.class, "p");
-                p.setDefinition(new CpsFlowDefinition(""
-                        + "node {\n"
-                        + "  step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: '" + Paths.get(getClass().getResource("/SeleniumHtmlReportTest.html").toURI()).getParent().toString().replace("\\", "/") + "'])\n"
-                        + "}", true));
-                WorkflowRun b = story.j.assertBuildStatusSuccess(p.scheduleBuild2(0));
+        p.setDefinition(new CpsFlowDefinition(""
+                + "node {\n"
+                + "  step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: '.'])\n"
+                + "}", true));
+        WorkflowRun b = story.assertBuildStatusSuccess(p.scheduleBuild2(0));
 
-                story.j.assertLogContains("parsing resultFile SeleniumHtmlReportTest.html", b);
-            }
-        });
+        story.assertLogContains("parsing resultFile result.html", b);
+        assertEquals(42, b.getAction(SeleniumHtmlReportAction.class).getTotalTime());
+    }
+
+    private byte[] createSeleniumResultFile() {
+        String result = "<html>\n" +
+                "<head><title>SeleniumHtmlReportTest</title></head>\n" +
+                "<body>\n" +
+                "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\">\n" +
+                "    <tr>\n" +
+                "        <td rowspan=\"1\" colspan=\"3\">SeleniumHtmlReportTest</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>result:</td>\n" +
+                "        <td>passed</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>totalTime:</td>\n" +
+                "        <td>42</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numTestTotal:</td>\n" +
+                "        <td>4</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numTestPasses:</td>\n" +
+                "        <td>4</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numTestFailures:</td>\n" +
+                "        <td>0</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numCommandPasses:</td>\n" +
+                "        <td>42</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numCommandFailures:</td>\n" +
+                "        <td>0</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>numCommandErrors:</td>\n" +
+                "        <td>0</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>setSpeed</td>\n" +
+                "        <td>1000</td>\n" +
+                "        <td></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>open</td>\n" +
+                "        <td></td>\n" +
+                "        <td></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>type</td>\n" +
+                "        <td>q</td>\n" +
+                "        <td>SeleniumHtmlReportTest</td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>click</td>\n" +
+                "        <td>btnG</td>\n" +
+                "        <td></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "        <td>verifyTextPresent</td>\n" +
+                "        <td>SeleniumHtmlReportTest</td>\n" +
+                "        <td></td>\n" +
+                "    </tr>\n" +
+                "</table>\n" +
+                "</body>\n" +
+                "</html>";
+
+        return result.getBytes(StandardCharsets.UTF_8);
     }
 
 }
