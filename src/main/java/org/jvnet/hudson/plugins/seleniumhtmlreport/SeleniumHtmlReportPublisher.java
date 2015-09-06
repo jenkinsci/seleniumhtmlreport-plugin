@@ -19,7 +19,11 @@ import jenkins.tasks.SimpleBuildStep;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 /**
  * @author Marco Machmer
@@ -30,32 +34,42 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
     
     private String SELENIUM_REPORTS_TARGET = "seleniumReports";
 
-    private final String testResultsDir;
+    private @Nonnull String testResultsDir = DescriptorImpl.defaultTestResultsDir;
 
-    private boolean failureIfExceptionOnParsingResultFiles = true;
+    private @Nonnull boolean failureIfExceptionOnParsingResultFiles = DescriptorImpl.defaultFailureIfExceptionOnParsingResultFiles;
 
-    /**
-     *
-     * @param testResultsDir
-     * @stapler-constructor
-     */
-    @DataBoundConstructor
+    @Deprecated
     public SeleniumHtmlReportPublisher(final String testResultsDir, final boolean failureIfExceptionOnParsingResultFiles) {
         super();
         this.testResultsDir = testResultsDir;
         this.failureIfExceptionOnParsingResultFiles = failureIfExceptionOnParsingResultFiles;
     }
 
-    public String getTestResultsDir() {
+    @DataBoundConstructor
+    public SeleniumHtmlReportPublisher() {
+        super();
+    }
+
+    public @Nonnull String getTestResultsDir() {
         return testResultsDir;
     }
 
-    public boolean getFailureIfExceptionOnParsingResultFiles() {
-        return this.failureIfExceptionOnParsingResultFiles;
+    @DataBoundSetter
+    public void setTestResultsDir(@Nonnull String testResultsDir) {
+        this.testResultsDir = testResultsDir;
+    }
+
+    public @Nonnull boolean getFailureIfExceptionOnParsingResultFiles() {
+        return failureIfExceptionOnParsingResultFiles;
+    }
+
+    @DataBoundSetter
+    public void setFailureIfExceptionOnParsingResultFiles(@Nonnull boolean failureIfExceptionOnParsingResultFiles) {
+        this.failureIfExceptionOnParsingResultFiles = failureIfExceptionOnParsingResultFiles;
     }
 
     public boolean isFailureIfExceptionOnParsingResultFiles() {
-        return this.failureIfExceptionOnParsingResultFiles;
+        return failureIfExceptionOnParsingResultFiles;
     }
 
     @Override
@@ -142,8 +156,12 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
             super(SeleniumHtmlReportPublisher.class);
         }
 
+        public static final String defaultTestResultsDir = "target";
+
+        public static final boolean defaultFailureIfExceptionOnParsingResultFiles = true;
+
         public String getDisplayName() {
-            return "Publish Selenium Html Report";
+            return Messages.SeleniumHtmlReportPublisher_DisplayName();
         }
 
         public FormValidation doCheckTestResultsDir(@QueryParameter String value) {

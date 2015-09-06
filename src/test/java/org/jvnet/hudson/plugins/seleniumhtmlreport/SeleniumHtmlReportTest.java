@@ -14,6 +14,8 @@ import org.jvnet.hudson.test.JenkinsRule;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.core.Is.isA;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 
 public class SeleniumHtmlReportTest {
@@ -23,15 +25,32 @@ public class SeleniumHtmlReportTest {
 
     @Test
     public void configRoundTrip() throws Exception {
-        SeleniumHtmlReportPublisher reportPublisher = new SeleniumHtmlReportPublisher(".", false);
+        SeleniumHtmlReportPublisher reportPublisher = new SeleniumHtmlReportPublisher();
+        reportPublisher.setTestResultsDir(".");
+        reportPublisher.setFailureIfExceptionOnParsingResultFiles(false);
         CoreStep step = new CoreStep(reportPublisher);
         step = new StepConfigTester(story).configRoundTrip(step);
         SimpleBuildStep delegate = step.delegate;
 
-        assertTrue(String.valueOf(delegate), delegate instanceof SeleniumHtmlReportPublisher);
+        assertThat(delegate, instanceOf(SeleniumHtmlReportPublisher.class));
+
         SeleniumHtmlReportPublisher s = (SeleniumHtmlReportPublisher) delegate;
         assertEquals(".", s.getTestResultsDir());
         assertFalse(s.getFailureIfExceptionOnParsingResultFiles());
+    }
+
+    @Test
+    public void configRoundTripWithDefaultValues() throws Exception {
+        SeleniumHtmlReportPublisher reportPublisher = new SeleniumHtmlReportPublisher();
+        CoreStep step = new CoreStep(reportPublisher);
+        step = new StepConfigTester(story).configRoundTrip(step);
+        SimpleBuildStep delegate = step.delegate;
+
+        assertThat(delegate, instanceOf(SeleniumHtmlReportPublisher.class));
+
+        SeleniumHtmlReportPublisher s = (SeleniumHtmlReportPublisher) delegate;
+        assertEquals("target", s.getTestResultsDir());
+        assertTrue(s.getFailureIfExceptionOnParsingResultFiles());
     }
 
     /**
