@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.609.1</version>
+        <version>1.609.3</version>
     </parent>
 
     <artifactId>seleniumhtmlreport</artifactId>
@@ -24,7 +24,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <workflow.version>1.9</workflow.version>
+        <workflow.version>1.10</workflow.version>
     </properties>
 
     <dependencies>
