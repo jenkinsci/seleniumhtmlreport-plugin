@@ -1,14 +1,11 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
 import java.io.File;
-
 import java.io.IOException;
 import java.io.Serializable;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import hudson.model.Run;
 import hudson.model.TaskListener;

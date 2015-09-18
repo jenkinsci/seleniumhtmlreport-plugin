@@ -1,5 +1,14 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+
 import hudson.FilePath;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
@@ -10,13 +19,6 @@ import org.jenkinsci.plugins.workflow.steps.StepConfigTester;
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.hamcrest.core.Is.isA;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.*;
 
 public class SeleniumHtmlReportTest {
 
