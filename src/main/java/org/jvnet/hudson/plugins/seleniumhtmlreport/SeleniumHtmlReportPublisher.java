@@ -40,7 +40,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
 
     private @Nonnull String testResultsDir = DescriptorImpl.defaultTestResultsDir;
 
-    private @Nonnull boolean failureIfExceptionOnParsingResultFiles = DescriptorImpl.defaultFailureIfExceptionOnParsingResultFiles;
+    private boolean failureIfExceptionOnParsingResultFiles = DescriptorImpl.defaultFailureIfExceptionOnParsingResultFiles;
 
     @Deprecated
     public SeleniumHtmlReportPublisher(final String testResultsDir, final boolean failureIfExceptionOnParsingResultFiles) {
@@ -63,12 +63,12 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
         this.testResultsDir = testResultsDir;
     }
 
-    public @Nonnull boolean getFailureIfExceptionOnParsingResultFiles() {
+    public boolean getFailureIfExceptionOnParsingResultFiles() {
         return failureIfExceptionOnParsingResultFiles;
     }
 
     @DataBoundSetter
-    public void setFailureIfExceptionOnParsingResultFiles(@Nonnull boolean failureIfExceptionOnParsingResultFiles) {
+    public void setFailureIfExceptionOnParsingResultFiles(boolean failureIfExceptionOnParsingResultFiles) {
         this.failureIfExceptionOnParsingResultFiles = failureIfExceptionOnParsingResultFiles;
     }
 
