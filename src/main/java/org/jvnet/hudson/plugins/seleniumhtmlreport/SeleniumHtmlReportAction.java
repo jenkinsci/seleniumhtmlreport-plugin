@@ -1,29 +1,29 @@
 package org.jvnet.hudson.plugins.seleniumhtmlreport;
 
-import hudson.FilePath;
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.DirectoryBrowserSupport;
-import java.io.File;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+
+import hudson.FilePath;
+import hudson.model.Action;
+import hudson.model.DirectoryBrowserSupport;
+import hudson.model.Run;
+import jenkins.model.RunAction2;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * @author Marco Machmer
  */
-public class SeleniumHtmlReportAction implements Action, Serializable {
+public class SeleniumHtmlReportAction implements Action, Serializable, RunAction2 {
 
-    public final AbstractBuild<?, ?> build;
+    private transient Run<?, ?> build;
     private final List<TestResult> results;
     private final File seleniumReportsDir;
 
-    public SeleniumHtmlReportAction(AbstractBuild<?, ?> build, BuildListener listener, List<TestResult> results, File seleniumReportsDir) {
+    public SeleniumHtmlReportAction(List<TestResult> results, File seleniumReportsDir) {
         super();
-        this.build = build;
         this.results = results;
         this.seleniumReportsDir = seleniumReportsDir;
     }
@@ -40,7 +40,7 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
         return "seleniumhtmlreport";
     }
 
-    public AbstractBuild<?, ?>getOwner() {
+    public Run<?, ?>getOwner() {
         return this.build;
     }
 
@@ -56,8 +56,18 @@ public class SeleniumHtmlReportAction implements Action, Serializable {
         });
     }
 
-    protected static interface TestResultValueProvider {
-        public int getValueOf(TestResult result);
+    @Override
+    public void onAttached(Run<?, ?> build) {
+        this.build = build;
+    }
+
+    @Override
+    public void onLoad(Run<?, ?> build) {
+        this.build = build;
+    }
+
+    protected interface TestResultValueProvider {
+        int getValueOf(TestResult result);
     }
 
     protected int calculateSumOf(TestResultValueProvider values) {

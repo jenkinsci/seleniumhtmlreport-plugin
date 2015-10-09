@@ -1,8 +1,8 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <f:entry title="Selenium tests results location" field="testResultsDir">
-    <f:textbox />
+  <f:entry title="${%testResultsDir}" field="testResultsDir" description="${%testResultsDirDescription}">
+    <f:textbox default="${descriptor.defaultTestResultsDir}"/>
   </f:entry>
-  <f:entry title="Set build result state to failure if an exception occured while parsing result files" field="failureIfExceptionOnParsingResultFiles">
-      <f:checkbox />
+  <f:entry title="${%failureIfExceptionOnParsingResultFiles}" field="failureIfExceptionOnParsingResultFiles">
+      <f:checkbox default="${descriptor.defaultFailureIfExceptionOnParsingResultFiles}"/>
   </f:entry>
 </j:jelly>
