@@ -11,7 +11,7 @@
     <name>Selenium HTML report</name>
     <description>This is an jenkins plugin to visualize the results of selenium tests</description>
     <url>https://wiki.jenkins-ci.org/display/JENKINS/seleniumhtmlreport+Plugin</url>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>hpi</packaging>
 
     <developers>
@@ -76,7 +76,7 @@
         <connection>scm:git:ssh://github.com/jenkinsci/seleniumhtmlreport.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/seleniumhtmlreport.git</developerConnection>
         <url>https://github.com/jenkinsci/seleniumhtmlreport</url>
-      <tag>HEAD</tag>
+      <tag>seleniumhtmlreport-1.1</tag>
   </scm>
 
     <distributionManagement>
