@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import hudson.FilePath;
-import hudson.model.Action;
 import hudson.model.DirectoryBrowserSupport;
 import hudson.model.Run;
 import jenkins.model.RunAction2;
@@ -16,7 +15,9 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * @author Marco Machmer
  */
-public class SeleniumHtmlReportAction implements Action, Serializable, RunAction2 {
+public class SeleniumHtmlReportAction implements Serializable, RunAction2 {
+
+    private static final long serialVersionUID = 1L;
 
     private transient Run<?, ?> build;
     private final List<TestResult> results;

@@ -35,7 +35,7 @@ import org.kohsuke.stapler.QueryParameter;
 public class SeleniumHtmlReportPublisher extends Recorder implements Serializable, SimpleBuildStep {
 
     private static final long serialVersionUID = 28042011L;
-    
+
     private String SELENIUM_REPORTS_TARGET = "seleniumReports";
 
     private @Nonnull String testResultsDir = DescriptorImpl.defaultTestResultsDir;
@@ -145,7 +145,7 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
             }
         }
     }
-    
+
     /**
      * Gets the directory where the latest selenium reports are stored for the
      * given build.
@@ -182,16 +182,16 @@ public class SeleniumHtmlReportPublisher extends Recorder implements Serializabl
             return rel.startsWith("/") || DRIVE_PATTERN.matcher(rel).matches();
         }
 
-        private static final Pattern DRIVE_PATTERN = Pattern.compile("[A-Za-z]:[\\\\/].*"),
-            ABSOLUTE_PREFIX_PATTERN = Pattern.compile("^(\\\\\\\\|(?:[A-Za-z]:)?[\\\\/])[\\\\/]*");
+        private static final Pattern DRIVE_PATTERN = Pattern.compile("[A-Za-z]:[\\\\/].*");
 
         @Override
+        @SuppressWarnings("rawtypes")
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
             return true;
         }
     }
 
-    private class ResultTuple {
+    private static class ResultTuple {
         boolean exceptionWhileParsing = false;
         List<TestResult> results;
 

@@ -116,6 +116,8 @@ public class TestResult implements Serializable {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setValidating(false);
             factory.setNamespaceAware(false);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
             SAXParser saxParser = factory.newSAXParser();
             ReadInfoHandler riHandler = new ReadInfoHandler(infoName);
@@ -142,7 +144,7 @@ public class TestResult implements Serializable {
         public String getInfo() {
             return this.info;
         }
-        
+
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             if ("td".equals(qName)) {
@@ -162,7 +164,7 @@ public class TestResult implements Serializable {
             this.tempVal = new String(ch, start, length).trim();
         }
     }
-    
+
     private static class BreakParsingException extends SAXException {
         public BreakParsingException() {
             super();

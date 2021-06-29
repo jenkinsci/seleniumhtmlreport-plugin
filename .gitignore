@@ -1,3 +1,9 @@
 /target
 /work
 nbactions.xml
+.settings
+.project
+.classpath
+.factorypath
+.vscode
+
