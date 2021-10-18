@@ -10,7 +10,7 @@
     <artifactId>seleniumhtmlreport</artifactId>
     <name>Selenium HTML report</name>
     <description>This is an jenkins plugin to visualize the results of selenium tests</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/seleniumhtmlreport+Plugin</url>
+    <url>https://github.com/jenkinsci/seleniumhtmlreport-plugin</url>
     <version>1.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
