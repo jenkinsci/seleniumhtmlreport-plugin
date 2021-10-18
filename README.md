@@ -31,4 +31,4 @@ This plugin is developed and maintained by Marco Machmer with kind
 support from [Abas Software AG](http://www.abas.de/). Please feel free
 to contact me for feedback. If you have suggestions for new features or
 you've found a bug, please use the [issue
-tracker](http://issues.jenkins-ci.org/browse/JENKINS/component/15781).
+tracker](https://issues.jenkins.io/issues/?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20seleniumhtmlreport-plugin).
